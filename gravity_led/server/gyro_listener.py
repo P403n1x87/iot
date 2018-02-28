@@ -16,6 +16,7 @@ class GyroListener(WSServer):
         self.logger.info("Connection ID {} established [path {}]".format(conn_id, path))
 
         G.setmode(G.BOARD)
+        
         G.setup(CHR, G.OUT)
         G.setup(CHL, G.OUT)
 
@@ -37,11 +38,11 @@ class GyroListener(WSServer):
                 else:
                     pr.ChangeDutyCycle(0)
                     pl.ChangeDutyCycle(-val)
-                # yield from websocket.send("ACK " + gyro_data)
 
             except websockets.exceptions.ConnectionClosed:
                 self.logger.info("Connection ID {} closed.".format(conn_id))
                 pr.stop()
-                return
+                pl.stop()
+                break
 
         G.cleanup()
